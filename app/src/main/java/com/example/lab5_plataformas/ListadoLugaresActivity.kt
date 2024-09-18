@@ -1,47 +1,27 @@
 package com.example.lab5_plataformas
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.tooling.preview.Preview
 import com.example.lab5_plataformas.ui.theme.Lab5_plataformasTheme
 
-data class Lugar(val titulo: String, val subtitulo: String)
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListadoLugaresScreen(lugares: List<Lugar>) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Venues") }
-            )
-        }
-    ) { padding ->
-        LazyColumn(
-            contentPadding = padding,
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.padding(16.dp)
-        ) {
-            items(lugares.size) { index ->
-                LugarItem(lugar = lugares[index])
-            }
-        }
-    }
-}
-
-@Composable
-fun LugarItem(lugar: Lugar) {
+fun LugarItem(lugar: Lugar, onItemClick: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = 8.dp)
+            .clickable { onItemClick(lugar.id) }, // Navegación al hacer clic
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -63,26 +43,43 @@ class ListadoLugaresActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Lab5_plataformasTheme {
-                val lugares = listOf(
-                    Lugar("Concert", "Place"),
-                    Lugar("Concert", "Place"),
-                    Lugar("Concert", "Place")
+                ListadoLugaresScreen(
+                    lugares = GlobalData.lugares,
+                    onItemClick = { lugarId ->
+                        val intent = Intent(this, DetailsActivity::class.java)
+                        intent.putExtra("LUGAR_ID", lugarId)
+                        startActivity(intent)
+                    },
+                    onBackClick = { finish() } // Regresa a la pantalla anterior
                 )
-                ListadoLugaresScreen(lugares)
             }
         }
     }
 }
 
-@Preview(showBackground = true)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListadoLugaresPreview() {
-    Lab5_plataformasTheme {
-        val lugares = listOf(
-            Lugar("Concert", "Place"),
-            Lugar("Concert", "Place"),
-            Lugar("Concert", "Place")
-        )
-        ListadoLugaresScreen(lugares)
+fun ListadoLugaresScreen(lugares: List<Lugar>, onItemClick: (String) -> Unit, onBackClick: () -> Unit = {}) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Venues") },
+                navigationIcon = {
+                    IconButton(onClick = { onBackClick() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        LazyColumn(
+            contentPadding = padding,
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(16.dp)
+        ) {
+            items(lugares.size) { index ->
+                LugarItem(lugar = lugares[index], onItemClick = onItemClick)
+            }
+        }
     }
 }

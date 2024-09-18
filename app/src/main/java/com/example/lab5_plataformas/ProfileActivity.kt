@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +22,7 @@ class ProfileActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             Lab5_plataformasTheme {
-                ProfileScreen()
+                ProfileScreen(onBackClick = { finish() }) // Regresa a la pantalla anterior
             }
         }
     }
@@ -28,22 +30,25 @@ class ProfileActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(onBackClick: () -> Unit = {}) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Profile") },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
-                )
+                navigationIcon = {
+                    IconButton(onClick = { onBackClick() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
         }
-    ) { padding ->
+    ){ padding ->
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
         ) {
+            // Contenido del perfil
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -56,7 +61,6 @@ fun ProfileScreen() {
                     modifier = Modifier.fillMaxSize()
                 )
 
-                // Imagen de avatar circular
                 Image(
                     painter = rememberAsyncImagePainter("https://images.unsplash.com/photo-1603415526960-f6e0d0653662"), // URL de la imagen de perfil
                     contentDescription = null,
@@ -67,7 +71,6 @@ fun ProfileScreen() {
                 )
             }
 
-            // Nombre del usuario
             Text(
                 text = "User",
                 style = MaterialTheme.typography.bodyLarge,

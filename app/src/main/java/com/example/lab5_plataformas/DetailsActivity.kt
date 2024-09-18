@@ -5,24 +5,64 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.recreate
 import com.example.lab5_plataformas.ui.theme.Lab5_plataformasTheme
+
+class DetailsActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val lugarId = intent.getStringExtra("LUGAR_ID") ?: return
+        val lugar = GlobalData.lugares.find { it.id == lugarId }
+
+        setContent {
+            Lab5_plataformasTheme {
+                lugar?.let {
+                    DetailsScreen(
+                        lugar = it.titulo,
+                        fecha = "Fecha de evento",
+                        hora = "Hora de evento",
+                        descripcion = "Descripción del evento",
+                        isFavorite = GlobalData.isFavorite(it), // Usar el objeto completo de lugar
+                        onFavoriteClick = { GlobalData.toggleFavorite(it) }, // Toggle usando el objeto completo
+                        onBackPressed = { finish() } // Acción para regresar a la pantalla anterior
+                    )
+                }
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailsScreen(lugar: String, fecha: String, hora: String, descripcion: String) {
+fun DetailsScreen(
+    lugar: String,
+    fecha: String,
+    hora: String,
+    descripcion: String,
+    isFavorite: Boolean,
+    onFavoriteClick: () -> Unit,
+    onBackPressed: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Detalle") }
+                title = { Text(text = "Detalle") },
+                navigationIcon = {
+                    IconButton(onClick = { onBackPressed() }) {
+                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
         }
     ) { padding ->
@@ -32,7 +72,7 @@ fun DetailsScreen(lugar: String, fecha: String, hora: String, descripcion: Strin
                 .fillMaxSize()
         ) {
             Image(
-                painter = painterResource(id = R.drawable.fondo_celeste), // Reemplaza 'your_local_image' con el nombre de tu recurso de imagen local
+                painter = painterResource(id = R.drawable.fondo_celeste),
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -95,48 +135,21 @@ fun DetailsScreen(lugar: String, fecha: String, hora: String, descripcion: Strin
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { /* TODO: Acción de favorito */ },
-                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+                    onClick = onFavoriteClick,
+                    colors = ButtonDefaults.buttonColors(
+                        if (isFavorite) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                    )
                 ) {
-                    Text(text = "Favorite")
+                    Text(text = if (isFavorite) "Favorited" else "Favorite")
                 }
 
                 Button(
-                    onClick = { /* TODO: Acción de compra */ },
+                    onClick = { /* Acción de compra */ },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
                 ) {
                     Text(text = "Buy")
                 }
             }
         }
-    }
-}
-
-class DetailsActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            Lab5_plataformasTheme {
-                DetailsScreen(
-                    lugar = "Lugar",
-                    fecha = "Fecha",
-                    hora = "Hora",
-                    descripcion = "Hi."
-                )
-            }
-        }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DetailsPreview() {
-    Lab5_plataformasTheme {
-        DetailsScreen(
-            lugar = "Lugar",
-            fecha = "Fecha",
-            hora = "Hora",
-            descripcion = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet pellentes. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam sit amet pellentes."
-        )
     }
 }
