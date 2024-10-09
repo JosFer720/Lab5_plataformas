@@ -1,3 +1,4 @@
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -9,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.lab5_plataformas"
-        minSdk = 31
+        minSdk = 34
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -51,7 +52,6 @@ android {
 
 dependencies {
 
-    implementation("io.coil-kt:coil-compose:2.0.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -60,6 +60,26 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.coil.compose)
+    //Retrofit
+    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+
+    // lifeCycle
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+
+    //navigation
+    implementation(libs.androidx.navigation.compose)
+    // Views/Fragments integration
+    implementation(libs.androidx.navigation.fragment)
+    implementation(libs.androidx.navigation.ui)
+
+
+
+    // Feature module support for Fragments
+    implementation(libs.navigation.dynamic.features.fragment)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

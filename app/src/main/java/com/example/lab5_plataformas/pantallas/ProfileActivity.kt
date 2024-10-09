@@ -1,4 +1,4 @@
-package com.example.lab5_plataformas
+package com.example.lab5_plataformas.pantallas
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -48,7 +48,6 @@ fun ProfileScreen(onBackClick: () -> Unit = {}) {
                 .padding(padding)
                 .fillMaxSize()
         ) {
-            // Contenido del perfil
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

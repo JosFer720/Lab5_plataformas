@@ -1,4 +1,4 @@
-package com.example.lab5_plataformas
+package com.example.lab5_plataformas.pantallas
 
 data class Lugar(
     val id: String,

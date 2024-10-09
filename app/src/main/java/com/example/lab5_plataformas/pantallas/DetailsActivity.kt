@@ -1,4 +1,4 @@
-package com.example.lab5_plataformas
+package com.example.lab5_plataformas.pantallas
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,7 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat.recreate
+import com.example.lab5_plataformas.R
 import com.example.lab5_plataformas.ui.theme.Lab5_plataformasTheme
 
 class DetailsActivity : ComponentActivity() {

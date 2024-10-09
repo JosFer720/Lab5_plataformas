@@ -1,4 +1,4 @@
-package com.example.lab5_plataformas
+package com.example.lab5_plataformas.pantallas
 
 import androidx.compose.runtime.mutableStateListOf
 
