@@ -1,14 +1,15 @@
 package com.example.lab5_plataformas.networking
 
 import com.example.lab5_plataformas.networking.api.MealsApi
+import com.example.lab5_plataformas.networking.response.MealsByCategoryResponse
 import com.example.lab5_plataformas.networking.response.MealsCategoriesResponse
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MealsWebService {
 
-    private lateinit var api: MealsApi
+    val api: MealsApi
 
     init {
         val retrofit = Retrofit.Builder()
@@ -19,7 +20,11 @@ class MealsWebService {
         api = retrofit.create(MealsApi::class.java)
     }
 
-    fun getMeals(): Call<MealsCategoriesResponse> {
+    suspend fun getMeals(): Response<MealsCategoriesResponse> {
         return api.getMeals()
+    }
+
+    suspend fun getMealsByCategory(category: String): Response<MealsByCategoryResponse> {
+        return api.getMealsByCategory(category)
     }
 }
