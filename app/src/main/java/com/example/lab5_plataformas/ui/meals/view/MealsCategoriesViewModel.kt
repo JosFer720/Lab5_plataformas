@@ -1,5 +1,3 @@
-package com.example.lab5_plataformas.ui.meals.view
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lab5_plataformas.networking.response.MealResponse
@@ -8,20 +6,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class MealsCategoriesViewModel(private val repository: MealsRepository = MealsRepository()) : ViewModel() {
+class MealsCategoriesViewModel(private val repository: MealsRepository) : ViewModel() {
 
-    // Exponer una lista de MealResponse como StateFlow
     private val _mealsCategories = MutableStateFlow<List<MealResponse>>(emptyList())
-    val mealsCategories: StateFlow<List<MealResponse>> get() = _mealsCategories
+    val mealsCategories: StateFlow<List<MealResponse>> = _mealsCategories
 
     init {
-        fetchMeals()
+        fetchMealsCategories()
     }
 
-    private fun fetchMeals() {
+    private fun fetchMealsCategories() {
         viewModelScope.launch {
-            val response = repository.getMeals()
-            _mealsCategories.value = response?.categories ?: emptyList()
+            _mealsCategories.value = repository.getMealsCategories()?.categories ?: emptyList()
         }
     }
 }

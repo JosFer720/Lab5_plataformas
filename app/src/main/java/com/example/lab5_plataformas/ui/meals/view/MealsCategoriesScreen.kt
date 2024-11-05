@@ -1,28 +1,32 @@
-package com.example.lab5_plataformas.ui.meals.view
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import com.example.lab5_plataformas.networking.response.MealResponse
+import androidx.compose.runtime.remember
+import androidx.navigation.NavController
 
 @Composable
 fun MealsCategoriesScreen(
     viewModel: MealsCategoriesViewModel,
-    onCategorySelected: (String) -> Unit
+    navController: NavController
 ) {
     val mealsCategories = viewModel.mealsCategories.collectAsState()
 
     LazyColumn {
-        items(mealsCategories.value) { meal ->
+        items(mealsCategories.value) { category ->
             Text(
-                text = meal.name,
+                text = category.name,
                 modifier = androidx.compose.ui.Modifier.clickable {
-                    onCategorySelected(meal.id)  // Llama a la función cuando se selecciona un elemento
+                    navController.navigate("mealList/${category.name}")
                 }
             )
         }
+    }
+
+    Button(onClick = { navController.navigate("mealList") }) {
+        Text("Ver Comidas")
     }
 }

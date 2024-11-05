@@ -1,28 +1,33 @@
-package com.example.lab5_plataformas.pantallas.ui.meals.view
-
-import android.annotation.SuppressLint
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import com.example.lab5_plataformas.networking.MealsWebService
-import com.example.lab5_plataformas.pantallas.ui.meals.repository.MealDetailRepository
+import androidx.navigation.NavController
 
 @Composable
-fun MealDetailScreen(mealId: String) {
-    // Crear el ViewModel manualmente y recordarlo
-    val viewModel = remember { MealDetailViewModel(MealDetailRepository(MealsWebService().api)) }
-    val mealDetail = viewModel.mealDetail.collectAsState(initial = null)
+fun MealDetailScreen(
+    mealId: String,
+    viewModel: MealDetailViewModel,
+    navController: NavController
+) {
+    val mealDetail = viewModel.mealDetail.collectAsState()
 
-    // Ejecuta fetchMealDetails solo cuando mealId cambia
+    // Llamada para obtener detalles de la comida seleccionada
     LaunchedEffect(mealId) {
         viewModel.fetchMealDetails(mealId)
     }
 
-    // Renderiza los detalles de la comida si están disponibles
+    // Mostrar los detalles si están disponibles
     mealDetail.value?.let { meal ->
         Text(text = meal.name)
         Text(text = meal.instructions)
+        Text(text = meal.thumbnail)
+    }
+
+    // Botón para regresar a la lista de comidas
+    Button(onClick = { navController.popBackStack() }) {
+        Text("Regresar a Lista de Comidas")
     }
 }
